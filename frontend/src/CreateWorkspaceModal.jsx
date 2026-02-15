@@ -1,4 +1,5 @@
 import { useState } from "react";
+const API_BASE = import.meta.env.VITE_API_BASE_URL;
 
 export default function CreateWorkspaceModal({ userId, onCreated, onClose }) {
   const [name, setName] = useState("");
@@ -13,7 +14,7 @@ export default function CreateWorkspaceModal({ userId, onCreated, onClose }) {
     setLoading(true);
 
     try {
-      const res = await fetch("http://localhost:3000/workspace/create", {
+      const res = await fetch(`${API_BASE}/workspace/create`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

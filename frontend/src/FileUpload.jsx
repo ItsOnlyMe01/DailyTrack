@@ -1,4 +1,5 @@
 import { useState } from "react";
+const API_BASE = import.meta.env.VITE_API_BASE_URL;
 
 export default function FileUpload({ workspaceId, onSuccess }) {
   const [file, setFile] = useState(null);
@@ -17,7 +18,7 @@ export default function FileUpload({ workspaceId, onSuccess }) {
     setLoading(true);
 
     try {
-      const res = await fetch("http://localhost:3000/documents/upload", {
+      const res = await fetch(`${API_BASE}/documents/upload`, {
         method: "POST",
         body: formData,
       });

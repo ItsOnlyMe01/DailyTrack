@@ -7,6 +7,7 @@ import TopBar from "./TopBar";
 import ChatArea from "./ChatArea";
 import IntroPopup from "./IntroPopup";
 import Header from "./Header";
+const API_BASE = import.meta.env.VITE_API_BASE_URL;
 
 export default function App() {
   const [input, setInput] = useState("");
@@ -31,7 +32,7 @@ export default function App() {
      EMAIL → USER → WORKSPACES
      ====================== */
   async function handleEmailSubmit(email) {
-    const res = await fetch("http://localhost:3000/user/identify", {
+    const res = await fetch(`${API_BASE}/user/identify`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ email }),
@@ -40,9 +41,7 @@ export default function App() {
     const userData = await res.json();
     setUser(userData);
 
-    const wsRes = await fetch(
-      `http://localhost:3000/workspace/list/${userData.id}`,
-    );
+    const wsRes = await fetch(`${API_BASE}/workspace/list/${userData.id}`);
     const wsList = await wsRes.json();
     setWorkspaces(wsList);
   }
@@ -64,7 +63,7 @@ export default function App() {
     setLoading(true);
 
     try {
-      const res = await fetch("http://localhost:3000/api/ask", {
+      const res = await fetch(`${API_BASE}/api/ask`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
