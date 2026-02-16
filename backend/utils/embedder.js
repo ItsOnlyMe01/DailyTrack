@@ -1,14 +1,23 @@
-const { Ollama } = require("ollama");
+const axios = require("axios");
 
-const ollama = new Ollama({ host: "http://127.0.0.1:11434" });
+const GROQ_API_KEY = process.env.GROQ_API_KEY;
 
 async function embedText(text) {
-  const response = await ollama.embed({
-    model: "nomic-embed-text",
-    input: text,
-  });
+  const res = await axios.post(
+    "https://api.groq.com/openai/v1/embeddings",
+    {
+      model: "nomic-embed-text",
+      input: text,
+    },
+    {
+      headers: {
+        Authorization: `Bearer ${GROQ_API_KEY}`,
+        "Content-Type": "application/json",
+      },
+    },
+  );
 
-  return response.embeddings[0];
+  return res.data.data[0].embedding;
 }
 
 module.exports = { embedText };
