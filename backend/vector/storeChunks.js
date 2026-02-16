@@ -1,4 +1,5 @@
 const { client } = require("./chroma");
+const { embedText } = require("../utils/embedder");
 
 async function storeChunks(chunks, workspaceId, documentId) {
   const collection = await client.getOrCreateCollection({
@@ -6,9 +7,12 @@ async function storeChunks(chunks, workspaceId, documentId) {
   });
 
   for (let i = 0; i < chunks.length; i++) {
+    const embedding = await embedText(chunks[i]);
+
     await collection.add({
       ids: [`${documentId}_${i}`],
       documents: [chunks[i]],
+      embeddings: [embedding], //  YOU provide embeddings
       metadatas: [{ workspaceId: String(workspaceId) }],
     });
   }
