@@ -17,3 +17,4 @@ build
 frontend/.env.development
 frontend/.env.production
 backend/.env
+backend/chroma/
