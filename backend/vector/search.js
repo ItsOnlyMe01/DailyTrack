@@ -1,12 +1,16 @@
 const { client } = require("./chroma");
+const { embedText } = require("../utils/embedder"); // ← import embedder
 
 async function searchSimilar(query, workspaceId, topK = 5) {
   const collection = await client.getOrCreateCollection({
     name: "documents",
+    embeddingFunction: null,
   });
 
+  const queryEmbedding = await embedText(query);
+
   const results = await collection.query({
-    queryTexts: [query], // Chroma embeds query automatically
+    queryEmbeddings: [queryEmbedding],
     nResults: topK,
     where: { workspaceId: String(workspaceId) },
   });

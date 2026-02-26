@@ -12,3 +12,8 @@ build
 
 # OS
 .DS_Store
+
+
+frontend/.env.development
+frontend/.env.production
+backend/.env

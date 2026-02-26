@@ -5,7 +5,7 @@ const { getCurrentMonth } = require("../utils/currentMonth");
 const { findLedger, createLedger } = require("../db/ledger");
 const { applyPayment } = require("../db/payments");
 
-const { extractReadQuery } = require("../utils/readQueryExtractor");
+const { extractReadQuery } = require("../utils/readqueryExtractor");
 const { resolveMonth } = require("../utils/resolveMonth");
 const { getLedgerField, getPaymentsSum } = require("../db/readQueries");
 
