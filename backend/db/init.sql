@@ -118,7 +118,7 @@ CREATE TABLE public.document_chunks (
     document_id integer,
     workspace_id integer,
     content text NOT NULL,
-    embedding public.vector(768)
+    embedding public.vector(3072)
 );
 
 CREATE SEQUENCE public.document_chunks_id_seq START WITH 1 INCREMENT BY 1 NO MINVALUE NO MAXVALUE CACHE 1;
