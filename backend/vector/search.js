@@ -1,21 +1,17 @@
-const { client } = require("./chroma");
-const { embedText } = require("../utils/embedder"); // ← import embedder
+const pool = require("../db/pool");
+const { embedText } = require("../utils/embedder");
 
 async function searchSimilar(query, workspaceId, topK = 5) {
-  const collection = await client.getOrCreateCollection({
-    name: "documents",
-    embeddingFunction: null,
-  });
-
   const queryEmbedding = await embedText(query);
+  const embeddingStr = `[${queryEmbedding.join(",")}]`;
 
-  const results = await collection.query({
-    queryEmbeddings: [queryEmbedding],
-    nResults: topK,
-    where: { workspaceId: String(workspaceId) },
-  });
+  const res = await pool.query(
+    "SELECT content FROM document_chunks WHERE workspace_id = $1 ORDER BY embedding <=> $2 LIMIT $3",
+    [workspaceId, embeddingStr, topK],
+  );
 
-  return results.documents[0] || [];
+  return res.rows.map((row) => row.content);
 }
 
 module.exports = { searchSimilar };
+

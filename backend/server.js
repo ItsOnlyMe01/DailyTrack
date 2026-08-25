@@ -11,7 +11,7 @@ const app = express();
 
 app.use(
   cors({
-    origin: "http://localhost:5173",
+    origin: process.env.FRONTEND_URL || "http://localhost:5173",
     credentials: true,
   }),
 );
@@ -28,7 +28,12 @@ app.use("/workspace", workspaceRoutes);
 app.use("/context", contextRoutes);
 app.use("/documents", documentRoutes);
 
-const PORT = 3000;
-app.listen(PORT, () => {
-  console.log("Server running on port no ", PORT);
-});
+if (!process.env.VERCEL) {
+  const PORT = process.env.PORT || 3000;
+  app.listen(PORT, () => {
+    console.log("Server running on port no ", PORT);
+  });
+}
+
+module.exports = app;
+

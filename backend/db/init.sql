@@ -102,3 +102,34 @@ ALTER TABLE ONLY public.payments
 
 ALTER TABLE ONLY public.documents
     ADD CONSTRAINT documents_workspace_id_fkey FOREIGN KEY (workspace_id) REFERENCES public.workspaces(id);
+
+--
+-- pgvector Extension
+--
+
+CREATE EXTENSION IF NOT EXISTS vector;
+
+--
+-- Document Chunks Table
+--
+
+CREATE TABLE public.document_chunks (
+    id integer NOT NULL,
+    document_id integer,
+    workspace_id integer,
+    content text NOT NULL,
+    embedding public.vector(768)
+);
+
+CREATE SEQUENCE public.document_chunks_id_seq START WITH 1 INCREMENT BY 1 NO MINVALUE NO MAXVALUE CACHE 1;
+ALTER SEQUENCE public.document_chunks_id_seq OWNED BY public.document_chunks.id;
+ALTER TABLE ONLY public.document_chunks ALTER COLUMN id SET DEFAULT nextval('public.document_chunks_id_seq'::regclass);
+
+ALTER TABLE ONLY public.document_chunks
+    ADD CONSTRAINT document_chunks_pkey PRIMARY KEY (id);
+
+ALTER TABLE ONLY public.document_chunks
+    ADD CONSTRAINT document_chunks_document_id_fkey FOREIGN KEY (document_id) REFERENCES public.documents(id) ON DELETE CASCADE;
+
+ALTER TABLE ONLY public.document_chunks
+    ADD CONSTRAINT document_chunks_workspace_id_fkey FOREIGN KEY (workspace_id) REFERENCES public.workspaces(id) ON DELETE CASCADE;
